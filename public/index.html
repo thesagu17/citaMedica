@@ -21,9 +21,7 @@
       padding: 8px 15px;
       border-radius: 5px;
     }
-    nav a:hover {
-      background: rgba(0,0,0,0.2);
-    }
+    nav a:hover { background: rgba(0,0,0,0.2); }
 
     main {
       padding: 40px;
@@ -61,11 +59,18 @@
     th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     th { background: #f0f0f0; }
 
-    .btn-secondary {
-      background: gray;
+    .actions { margin-bottom: 10px; }
+
+    .btn-edit {
+      background: #2c84f7;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    .actions {
-      margin-bottom: 10px;
+    .btn-edit:hover {
+      background: #337fe4;
     }
   </style>
 </head>
@@ -130,12 +135,11 @@
         <th>Sexo</th>
         <th>Teléfono</th>
         <th>Email</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
-
-  
 
 </main>
 
@@ -165,11 +169,11 @@
     });
 
     if (res.ok) {
-      alert('✅ Paciente registrado');
+      alert(' Paciente registrado');
       formPaciente.reset();
       cargarPacientes();
     } else {
-      alert(`⚠️ ${await res.text()}`);
+      alert(` ${await res.text()}`);
     }
   });
 
@@ -187,33 +191,20 @@
         <td>${p.sexo || ''}</td>
         <td>${p.telefono || ''}</td>
         <td>${p.email || ''}</td>
+        <td>
+          <button class="btn-edit" onclick="editarPaciente(${p.paciente_id})">Editar</button>
+        </td>
       </tr>
     `).join('');
   }
 
-  // Cargar citas
-  async function cargarCitas() {
-    const res = await fetch(API_CITAS);
-    const data = await res.json();
-    const tbody = document.querySelector('#tablaCitas tbody');
-
-    tbody.innerHTML = data.map(c => `
-      <tr>
-        <td>${c.cita_id}</td>
-        <td>${c.paciente_nombre} ${c.paciente_apellido}</td>
-        <td>${c.medico_nombre} ${c.medico_apellido}</td>
-        <td>${c.especialidad}</td>
-        <td>${c.fecha}</td>
-        <td>${c.hora}</td>
-        <td>${c.motivo || ''}</td>
-        <td><button onclick="window.location.href='/cita/actualizar/${c.cita_id}'">Editar</button></td>
-      </tr>
-    `).join('');
+  // Redirigir a la página de edición
+  function editarPaciente(id) {
+    window.location.href = `/pacientes/editar/${id}`;
   }
 
   // Al cargar página
   cargarPacientes();
-  cargarCitas();
 </script>
 
 </body>
