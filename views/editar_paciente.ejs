@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Paciente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 80px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: #0056b3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0053acce;
+    }
+
+    a {
+      display: block;
+      margin-top: 15px;
+      text-align: center;
+      color: #333;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Editar Paciente</h1>
+
+  <form method="POST" action="/pacientes/actualizar">
+    <input type="hidden" name="paciente_id" value="<%= paciente.paciente_id %>">
+
+    <label>Documento:</label>
+    <input type="text" name="nro_documento" value="<%= paciente.nro_documento %>" disabled>
+
+    <label>Nombre:</label>
+    <input type="text" name="nombre" value="<%= paciente.nombre %>" required>
+
+    <label>Apellido:</label>
+    <input type="text" name="apellido" value="<%= paciente.apellido %>" required>
+
+    <label>Fecha de Nacimiento:</label>
+    <input type="date" name="fecha_nacimiento" value="<%= paciente.fecha_nacimiento ? paciente.fecha_nacimiento.toISOString().split('T')[0] : '' %>">
+
+    <label>Sexo:</label>
+    <select name="sexo">
+      <option value="">Seleccione...</option>
+      <option value="M" <%= paciente.sexo === 'M' ? 'selected' : '' %>>Masculino</option>
+      <option value="F" <%= paciente.sexo === 'F' ? 'selected' : '' %>>Femenino</option>
+    </select>
+
+    <label>Teléfono:</label>
+    <input type="text" name="telefono" value="<%= paciente.telefono %>">
+
+    <label>Email:</label>
+    <input type="email" name="email" value="<%= paciente.email %>">
+
+    <label>Dirección:</label>
+    <textarea name="direccion"><%= paciente.direccion %></textarea>
+
+    <button type="submit">Actualizar Paciente</button>
+  </form>
+
+<a href="/"> Volver al Inicio</a>
+
+</body>
+</html>
