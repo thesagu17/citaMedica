@@ -2,7 +2,7 @@ const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const path = require('path'); // necesario para rutas absolutas
+const path = require('path'); 
 
 const app = express();
 const port = 3000;
@@ -23,7 +23,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'cita_medica',
-  password: 'qwerty.123456',
+  password: 'Scobyypipo',
   port: 5432,
 });
 
@@ -56,7 +56,7 @@ app.get('/pacientes', async (req, res) => {
   }
 });
 
-//  Mostrar formulario de nueva cita con EJS
+//  Mostrar formulario nueva cita
 app.get("/cita/nueva", async (req, res) => {
   try {
     const pacientesResult = await pool.query(
@@ -182,6 +182,40 @@ app.get('/citas', async (req, res) => {
     res.status(500).send('Error al obtener citas');
   }
 });
+
+// Mostrar formulario de edición
+app.get('/pacientes/editar/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('SELECT * FROM pacientes WHERE paciente_id = $1', [id]);
+    if (result.rows.length === 0) return res.status(404).send('Paciente no encontrado');
+
+    res.render('editar_paciente', { paciente: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error al obtener paciente');
+  }
+});
+
+// Guardar cambios de paciente
+app.post('/pacientes/actualizar', async (req, res) => {
+  const { paciente_id, nombre, apellido, fecha_nacimiento, sexo, telefono, email, direccion } = req.body;
+  try {
+    await pool.query(
+      `UPDATE pacientes
+       SET nombre=$1, apellido=$2, fecha_nacimiento=$3, sexo=$4,
+           telefono=$5, email=$6, direccion=$7,
+           fecha_actualizacion=now()
+       WHERE paciente_id=$8`,
+      [nombre, apellido, fecha_nacimiento, sexo, telefono, email, direccion, paciente_id]
+    );
+    res.redirect('/pacientes');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error al actualizar paciente');
+  }
+});
+
 
 
 
