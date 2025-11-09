@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Actualizar Cita</title>
+  <style>
+    body { font-family: Arial; margin: 40px; background: #f7f9fb; }
+    form { background: white; padding: 20px; border-radius: 10px; max-width: 500px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input, select { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
+    button { background: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; margin-top: 15px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <h1>Actualizar Cita</h1>
+
+  <form method="POST" action="/cita/actualizar">
+    <input type="hidden" name="cita_id" value="<%= cita.cita_id %>">
+
+    <label>Fecha:</label>
+    <input type="date" value="<%= cita.fecha.toISOString().split('T')[0] %>" readonly>
+
+    <label>Hora Actual:</label>
+    <input type="time" value="<%= cita.hora %>" readonly>
+
+    <label>Nuevo Médico:</label>
+    <select name="medico_id" required>
+      <% medicos.forEach(m => { %>
+        <option value="<%= m.medico_id %>" <%= m.medico_id === cita.medico_id ? 'selected' : '' %>>
+          Dr(a). <%= m.nombre %> <%= m.apellido %> — <%= m.especialidad %>
+        </option>
+      <% }) %>
+    </select>
+
+    <label>Nueva Hora:</label>
+    <input type="time" name="hora" required>
+
+    <button type="submit">Actualizar Cita</button>
+  </form>
+
+  <br>
+  <a href="/">⬅ Volver al Inicio</a>
+</body>
+</html>

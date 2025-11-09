@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nueva Cita</title>
+</head>
+<body>
+  <h1>Programar Nueva Cita</h1>
+
+  <form method="POST" action="/cita/nueva">
+
+    <label>Paciente:</label><br>
+    <select name="paciente_id" required>
+      <option value="">Seleccione...</option>
+      <% pacientes.forEach(p => { %>
+        <option value="<%= p.paciente_id %>">
+          <%= p.nombre %> <%= p.apellido %> (Doc: <%= p.nro_documento %>)
+        </option>
+      <% }) %>
+    </select><br><br>
+
+    <label>Médico:</label><br>
+    <select name="medico_id" required>
+      <option value="">Seleccione...</option>
+      <% medicos.forEach(m => { %>
+        <option value="<%= m.medico_id %>">
+          Dr(a). <%= m.nombre %> <%= m.apellido %> — <%= m.especialidad %>
+        </option>
+      <% }) %>
+    </select><br><br>
+
+    <label>Fecha:</label><br>
+    <input type="date" name="fecha" required><br><br>
+
+    <label>Hora:</label><br>
+    <input type="time" name="hora" required><br><br>
+
+    <label>Motivo:</label><br>
+    <textarea name="motivo"></textarea><br><br>
+
+    <button type="submit">Guardar Cita</button>
+  </form>
+
+  <br>
+  <a href="/">⬅ Volver al Inicio</a>
+</body>
+</html>

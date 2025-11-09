@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Pacientes y Citas</title>
+  <style>
+    body { font-family: Arial; background: #f7f9fb; margin: 0; padding: 20px; }
+    h1, h2 { color: #333; }
+    form, table { background: white; padding: 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    input, select, textarea { width: 100%; padding: 8px; margin-top: 6px; border-radius: 5px; border: 1px solid #ccc; }
+    button { padding: 10px 15px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+    button:hover { background: #0056b3; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 10px; border: 1px solid #ddd; }
+    th { background: #eef1f6; }
+    .actions { margin-bottom: 10px; }
+  </style>
+</head>
+
+<body>
+
+  <h2>Lista de Citas</h2>
+  <div class="actions">
+    <button onclick="cargarCitas()">Actualizar Citas</button>
+    <button onclick="location.href='/cita/nueva'">Nueva Cita</button>
+    <button onclick="location.href='index.html'">Inicio</button>
+
+  </div>
+
+  <table id="tablaCitas">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Paciente</th>
+        <th>Médico</th>
+        <th>Especialidad</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Motivo</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+<script>
+  const API_PACIENTES = "http://localhost:3000/pacientes";
+  const API_CITAS = "http://localhost:3000/citas";
+
+  formPaciente.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const data = {
+      nro_documento: nro_documento.value,
+      nombre: nombre.value,
+      apellido: apellido.value,
+      fecha_nacimiento: fecha_nacimiento.value,
+      sexo: sexo.value,
+      telefono: telefono.value,
+      email: email.value,
+      direccion: direccion.value,
+    };
+
+    const res = await fetch(API_PACIENTES, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+      alert("Paciente registrado");
+      formPaciente.reset();
+      cargarPacientes();
+    } else {
+      alert("⚠️ " + await res.text());
+    }
+  });
+
+  async function cargarPacientes() {
+    const res = await fetch(API_PACIENTES);
+    const data = await res.json();
+    document.querySelector("#tablaPacientes tbody").innerHTML =
+      data.map(p => `
+        <tr>
+          <td>${p.paciente_id}</td>
+          <td>${p.nro_documento}</td>
+          <td>${p.nombre}</td>
+          <td>${p.apellido}</td>
+          <td>${p.sexo ?? ""}</td>
+          <td>${p.telefono ?? ""}</td>
+          <td>${p.email ?? ""}</td>
+        </tr>
+      `).join("");
+  }
+
+  async function cargarCitas() {
+    const res = await fetch(API_CITAS);
+    const data = await res.json();
+    document.querySelector("#tablaCitas tbody").innerHTML =
+      data.map(c => `
+        <tr>
+          <td>${c.cita_id}</td>
+          <td>${c.paciente_nombre} ${c.paciente_apellido}</td>
+          <td>${c.medico_nombre} ${c.medico_apellido}</td>
+          <td>${c.especialidad}</td>
+          <td>${c.fecha}</td>
+          <td>${c.hora}</td>
+          <td>${c.motivo ?? ""}</td>
+          <td><button onclick="location.href='/cita/actualizar/${c.cita_id}'">Editar</button></td>
+        </tr>
+      `).join("");
+  }
+
+  // Cargar al inicio
+  cargarPacientes();
+  cargarCitas();
+</script>
+
+</body>
+</html>
