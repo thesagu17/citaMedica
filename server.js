@@ -20,10 +20,10 @@ app.set("view engine", "ejs");
 
 // Conexión PostgreSQL
 const pool = new Pool({
-  user: 'postgres',
+  user: 'usuario',
   host: 'localhost',
   database: 'cita_medica',
-  password: 'Scobyypipo',
+  password: 'contraseña',
   port: 5432,
 });
 
@@ -223,3 +223,4 @@ app.post('/pacientes/actualizar', async (req, res) => {
 app.listen(port, () => {
   console.log(` Servidor corriendo en http://localhost:${port}`);
 });
+
